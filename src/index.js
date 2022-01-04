@@ -153,10 +153,12 @@ function calculateWinner(squares) {
 
 function calculatePosition(i) {
     let column;
+    let row;
 
     function divisibleByThree(number) {
         return (number % 3 === 0);
     }
+
     if (i === 0 || divisibleByThree(i)) {
         column = 1;
     } else if (i === 1 || divisibleByThree(i - 1)) {
@@ -165,5 +167,13 @@ function calculatePosition(i) {
         column = 3;
     }
 
-    return column;
+    if (i < 3) {
+        row = 1;
+    } else if (i < 6) {
+        row = 2;
+    } else {
+        row = 3
+    }
+
+    return ('Position: column ' + column + ', row ' + row);
 }

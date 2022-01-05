@@ -32,7 +32,7 @@ ol, ul {
     width: 34px;
 }
 
-.square.active {
+.active {
     color: darkcyan;
 }
 

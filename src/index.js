@@ -53,6 +53,30 @@ class Board extends React.Component {
     }
 }
 
+class MovesOrderToggle extends React.Component {
+    render() {
+        let btnActionText = 'Show moves ';
+        btnActionText += this.props.isMovesOrderAsc ? 'DESCENDING' : 'ASCENDING';
+        return (
+            <button
+                onClick={() => this.props.onClick()}
+            >{btnActionText}</button>
+        );
+    }
+}
+
+class Moves extends React.Component {
+    render() {
+        let moves = this.props.moves.slice();
+        if (!this.props.isMovesOrderAsc) {
+            moves.reverse();
+        }
+        return (
+            <ol reversed={!this.props.isMovesOrderAsc}>{moves}</ol>
+        );
+    }
+}
+
 class Game extends React.Component {
     constructor(props) {
         super(props);
@@ -64,6 +88,7 @@ class Game extends React.Component {
             }],
             stepNumber: 0,
             xIsNext: true,
+            isMovesOrderAsc: true,
         };
     }
 
@@ -94,6 +119,12 @@ class Game extends React.Component {
         this.setState({
             stepNumber: step,
             xIsNext: (step % 2) === 0,
+        });
+    }
+
+    toggleOrder() {
+        this.setState({
+            isMovesOrderAsc: !this.state.isMovesOrderAsc,
         });
     }
 
@@ -138,7 +169,14 @@ class Game extends React.Component {
                 </div>
                 <div className="game-info">
                     <div>{status}</div>
-                    <ol>{moves}</ol>
+                    <MovesOrderToggle
+                        onClick={() => this.toggleOrder()}
+                        isMovesOrderAsc={this.state.isMovesOrderAsc}
+                    />
+                    <Moves
+                        moves={moves}
+                        isMovesOrderAsc={this.state.isMovesOrderAsc}
+                    />
                 </div>
             </div>
         );

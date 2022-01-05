@@ -3,8 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 function Square(props) {
+    let className = 'square';
+    if (props.isActive) {
+        className += ' active';
+    }
+
     return (
-        <button className="square"
+        <button className={className}
                 onClick={props.onClick}>
             {props.value}
         </button>
@@ -15,6 +20,7 @@ class Board extends React.Component {
     renderSquare(i) {
         return (
             <Square
+                isActive={this.props.isMoveActive[i]}
                 value={this.props.squares[i]}
                 onClick={() => this.props.onClick(i)}
             />
@@ -51,6 +57,7 @@ class Game extends React.Component {
             history: [{
                 squares: Array(9).fill(null),
                 movePosition: [],
+                isMoveActive: Array(9).fill(false),
             }],
             stepNumber: 0,
             xIsNext: true,
@@ -61,15 +68,19 @@ class Game extends React.Component {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
         const squares = current.squares.slice();
+        const isActive = Array(9).fill(false);
         if (calculateWinner(squares) || squares[i]) {
             return;
         }
-        const movePosition =  calculatePosition(i);
+        const movePosition = calculatePosition(i);
         squares[i] = this.state.xIsNext ? 'X' : 'O';
+        isActive[i] = true;
+
         this.setState({
             history: history.concat([{
                 squares: squares,
                 movePosition: movePosition,
+                isMoveActive: isActive,
             }]),
             stepNumber: history.length,
             xIsNext: !this.state.xIsNext,
@@ -111,6 +122,7 @@ class Game extends React.Component {
             <div className="game">
                 <div className="game-board">
                     <Board
+                        isMoveActive={current.isMoveActive}
                         squares={current.squares}
                         onClick={(i) => this.handleClick(i)}
                     />
